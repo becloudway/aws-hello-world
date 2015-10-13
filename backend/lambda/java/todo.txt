@@ -1,0 +1,1 @@
+todo: aws lambda java project mimicking the lambda nodejs project
