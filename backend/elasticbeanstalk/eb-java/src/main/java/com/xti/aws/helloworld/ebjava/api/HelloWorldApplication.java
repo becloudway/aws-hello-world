@@ -8,6 +8,7 @@ import javax.ws.rs.ApplicationPath;
 public class HelloWorldApplication extends ResourceConfig {
 	public HelloWorldApplication(){
 	 	packages(true, "com.xti.aws.helloworld.ebjava.api");
+		register(JacksonFeature.class);
 	}
 
 }

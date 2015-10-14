@@ -9,8 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <streemr.version>0.0.1-SNAPSHOT</streemr.version>
-        <jdk.version>1.7</jdk.version>
+        <jdk.version>1.8</jdk.version>
         <servlet.api.version>3.1.0</servlet.api.version>
         <jersey2.version>2.18</jersey2.version>
         <jackson.version>2.5.3</jackson.version>

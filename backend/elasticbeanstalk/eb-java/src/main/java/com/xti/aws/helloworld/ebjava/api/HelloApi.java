@@ -12,6 +12,6 @@ public class HelloApi {
 	@GET
 	@Path("{it}")
 	public Response getHello(@PathParam("it") String it){
-		return Response.ok(new HelloResponse("Hello" + it), MediaType.APPLICATION_JSON_TYPE).build();
+		return Response.ok(new HelloResponse("Hello " + it), MediaType.APPLICATION_JSON_TYPE).build();
 	}
 }
