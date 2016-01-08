@@ -6,9 +6,11 @@ import javax.ws.rs.ApplicationPath;
 
 @ApplicationPath("rest")
 public class HelloWorldApplication extends ResourceConfig {
-	public HelloWorldApplication(){
+
+    public HelloWorldApplication(){
 	 	packages(true, "com.xti.aws.helloworld.ebjava.api");
 		register(JacksonFeature.class);
-	}
+        register(CORSResponseFilter.class);
+    }
 
 }

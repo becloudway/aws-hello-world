@@ -1,1 +1,0 @@
-todo: elastic beanstalk node project mimicking the java elastic beanstalk project
