@@ -10,8 +10,6 @@ import javax.ws.rs.core.FeatureContext;
  */
 public class JacksonFeature implements Feature {
 
-    /** This method is what actually gets called,
-     when your ResourceConfig registers a Feature. */
     @Override
     public boolean configure(FeatureContext context) {
         context.register(new JacksonJaxbJsonProvider());
