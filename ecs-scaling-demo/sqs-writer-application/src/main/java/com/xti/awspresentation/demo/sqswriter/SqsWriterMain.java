@@ -13,7 +13,7 @@ public class SqsWriterMain {
 	public static void main(String[] args) throws InterruptedException {
 		AmazonSQSClient SQSClient = new AmazonSQSClient(new DefaultAWSCredentialsProviderChain());
 		
-		String sqsUrl = "https://sqs.us-east-1.amazonaws.com/335317431711/SQS-with-cloudwatch-alarm-MyQueue-1IWL7SIRMQ7HY";
+		String sqsUrl = "https://sqs.us-east-1.amazonaws.com/335317431711/ECS-scaling-infrastructure-MyQueue-1LP2UQK4SH6EH";
 		
 		List<SendMessageBatchRequestEntry> messages = new ArrayList<>();
 		
@@ -28,7 +28,7 @@ public class SqsWriterMain {
 			SQSClient.sendMessageBatch(sqsUrl, messages);
 			messages.clear();
 			
-			//Thread.sleep(250);
+			Thread.sleep(250);
 		}
 	}
 

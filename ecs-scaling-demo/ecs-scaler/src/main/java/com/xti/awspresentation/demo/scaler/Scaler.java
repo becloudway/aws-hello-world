@@ -8,6 +8,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.ecs.AmazonECSClient;
+import com.amazonaws.services.ecs.model.DescribeServicesRequest;
+import com.amazonaws.services.ecs.model.DescribeServicesResult;
+import com.amazonaws.services.ecs.model.Service;
 import com.amazonaws.services.ecs.model.UpdateServiceRequest;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SNSEvent;
@@ -34,24 +37,39 @@ public class Scaler {
 			LOGGER.debug(snsRecord.getSNS().getType());
 		}
 		
-		SnsMessage snsMessage = new ObjectMapper().readValue(snsRecords.get(0).getSNS().getMessage(), SnsMessage.class);
-		
-		String clusterName = "SQS-with-cloudwatch-alarm-mycluster-UVYW8ZMWDW";
-		String serviceName = "SQS-with-cloudwatch-alarm-ECSService-1VFF1AQ5OC23F";
-		
 		DefaultAWSCredentialsProviderChain credentialsProvider = new DefaultAWSCredentialsProviderChain();
 		
 		AmazonECSClient ecsClient = new AmazonECSClient(credentialsProvider);
+		
+		String clusterName = "";
+		String serviceName = "";
+		
+		//here we expect that our CloudFormation stack has name: "ECS-scaling-infrastructure"
+		DescribeServicesResult services = ecsClient.describeServices(new DescribeServicesRequest());
+		for (Service service : services.getServices()) {
+			if(service.getServiceName().startsWith("ECS-scaling-infrastructure")) {
+				serviceName = service.getServiceName();
+				clusterName = service.getClusterArn();
+				break;
+			}
+		}
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		SNSRecord snsRecord = snsRecords.get(0);
+		String snsJsonMessage = snsRecord.getSNS().getMessage();
+		
+		SnsMessage snsMessage = objectMapper.readValue(snsJsonMessage, SnsMessage.class);
 		
 		int requiredTasks = 1;
 		if(!"OK".equals(snsMessage.getNewState())) {
 			requiredTasks = 8;
 		}
 		
-		UpdateServiceRequest usr = new UpdateServiceRequest();
-		usr.withCluster(clusterName)
-			.withDesiredCount(requiredTasks)
-			.withService(serviceName);
+		UpdateServiceRequest usr = new UpdateServiceRequest()
+											.withCluster(clusterName)
+											.withDesiredCount(requiredTasks)
+											.withService(serviceName);
 		ecsClient.updateService(usr);
 		
 		return "ok";

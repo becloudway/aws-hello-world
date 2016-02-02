@@ -5,6 +5,7 @@ from troposphere.sqs import Queue
 from troposphere.ecs import Cluster, Environment, TaskDefinition, LoadBalancer, Service, ContainerDefinition, Volume, PortMapping
 from troposphere.iam import Policy, Role, PolicyType, InstanceProfile
 from troposphere.autoscaling import AutoScalingGroup, LaunchConfiguration
+from troposphere.awslambda import Function, Code, EventSourceMapping
 import awacs
 import awacs.aws
 import awacs.sts
@@ -15,6 +16,8 @@ t = Template()
 
 t.add_description(
 	"Infrastructure for ECS scaling demo.")
+	
+myqueue = t.add_resource(Queue("MyQueue"))
 	
 instancerole = t.add_resource(
 	Role(
@@ -56,16 +59,6 @@ instanceprofile = t.add_resource(
 		"InstanceProfile",
 		Roles=[Ref("InstanceRole")],
 		Path="/"
-	)
-)
-
-alarmemail = t.add_parameter(
-	Parameter(
-	"AlarmEmail",
-	Default="nobody@amazon.com",
-	Description="Email address to notify if there are any "
-		        "operational issues",
-	Type="String",
 	)
 )
 
@@ -154,7 +147,8 @@ containerdefinition = ContainerDefinition(
 	Environment=[
 		Environment(Name="AWS_ACCESS_KEY_ID", Value=sys.argv[1]),
 		Environment(Name="AWS_SECRET_ACCESS_KEY", Value=sys.argv[2]),
-		Environment(Name="REGION", Value=sys.argv[3])
+		Environment(Name="REGION", Value=sys.argv[3]),
+		Environment(Name="SQS_URL", Value=Ref(myqueue))
 	]
 )
 
@@ -177,39 +171,39 @@ service = t.add_resource(
 	)
 )
 
-myqueue = t.add_resource(Queue("MyQueue"))
+scalinglambda = t.add_resource(Function(
+    "ScalingLambda",
+    Code=Code(
+		S3Bucket="demo-xti",
+		S3Key="scaler-0.0.1-SNAPSHOT.jar"
+    ),
+    Handler="com.xti.awspresentation.demo.scaler",
+    Role=GetAtt("LambdaExecutionRole", "Arn"),
+    Runtime="java8",
+    Timeout=30
+))
+
+lambdaexecutionrole = t.add_resource(Role(
+    "LambdaExecutionRole",
+    Path="/",
+    Policies=[Policy(
+        PolicyName="root",
+        PolicyDocument={
+            "Version": "2012-10-17",
+            "Statement": [{
+                "Action": ["logs:*"],
+                "Resource": "arn:aws:logs:*:*:*",
+                "Effect": "Allow"
+            }]
+        })],
+    AssumeRolePolicyDocument={"Version": "2012-10-17", "Statement": [
+        {"Action": ["sts:AssumeRole"], "Effect": "Allow",
+         "Principal": {"Service": ["lambda.amazonaws.com"]}}]},
+))
 
 alarmtopic = t.add_resource(
 	Topic(
-	"AlarmTopic",
-	Subscription=[
-		Subscription(
-		    Endpoint=Ref(alarmemail),
-		    Protocol="email"
-		),
-	],
-	)
-)
-
-queuedepthalarm = t.add_resource(
-	Alarm(
-	"QueueDepthAlarm",
-	AlarmDescription="Alarm if queue depth grows beyond 10 messages",
-	Namespace="AWS/SQS",
-	MetricName="ApproximateNumberOfMessagesVisible",
-	Dimensions=[
-		MetricDimension(
-		    Name="QueueName",
-		    Value=GetAtt(myqueue, "QueueName")
-		),
-	],
-	Statistic="Sum",
-	Period="60",
-	EvaluationPeriods="1",
-	Threshold="10",
-	ComparisonOperator="GreaterThanThreshold",
-	AlarmActions=[Ref(alarmtopic), ],
-	InsufficientDataActions=[Ref(alarmtopic), ],
+	"AlarmTopic"
 	)
 )
 
