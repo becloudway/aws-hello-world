@@ -345,14 +345,6 @@
                         "Cpu": "10",
                         "Environment": [
                             {
-                                "Name": "AWS_ACCESS_KEY_ID",
-                                "Value": "AKIAJPSCIGNNAFLGLQMQ"
-                            },
-                            {
-                                "Name": "AWS_SECRET_ACCESS_KEY",
-                                "Value": "eMihNxaAE3SjHGnnSHhttTR0McV3ZuKsXR37gTSs"
-                            },
-                            {
                                 "Name": "REGION",
                                 "Value": "us-east-1"
                             },
