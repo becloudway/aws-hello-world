@@ -29,7 +29,8 @@ public class UserAddedLambda implements RequestHandler<DynamodbEvent, String> {
 
                 context.getLogger().log("New user was added: " + user.getEmail());
 
-                String fileName = websiteGenerator.generateWebsite(user);
+                String prefix = context.getFunctionName().split("_")[0];
+                String fileName = websiteGenerator.generateWebsite(prefix, user);
 
                 mailService.sendMail(user.getEmail(), "AWS Presentation Website Created", "Hi " + user.getFirstName() + " " + user.getLastName() + ",\n\nYour personal website was generated at: http://elliodr-xti-awspresentation-user-sites.s3-website-eu-west-1.amazonaws.com/" + fileName + ".\n\nKind regards,\n\nAWS Presentation");
             } else {
