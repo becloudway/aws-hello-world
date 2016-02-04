@@ -21,7 +21,7 @@ public class HelloWorldRequestHandlerTest {
         HelloWorldRequestHandler helloWorldRequestHandler = new HelloWorldRequestHandler();
         HelloWorldResponse helloWorldResponse = helloWorldRequestHandler.handleRequest(helloWorldRequest, context);
 
-        assertEquals("Hello XT-i", helloWorldResponse.getMessage());
+        assertEquals("Hello XT-i from java8 lambda.", helloWorldResponse.getMessage());
     }
 
     private class ContextImplementation implements Context {
