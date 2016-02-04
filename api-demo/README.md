@@ -2,7 +2,7 @@
 
 Hello world project using Amazon AWS PAAS and SAAS services.
 
-All backend sub projects will expose their endpoint on /api/rest/hello/{world}.
+All backend sub projects will expose their endpoint on /api/hello/{world}.
 
 The frontend sub project will get the return json with a parametrizeable url.
 
