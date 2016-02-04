@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.xti.aws.helloworld.lambdajava.model.HelloWorldRequest;
 import com.xti.aws.helloworld.lambdajava.model.HelloWorldResponse;
 
+//Lambda handler: com.xti.aws.helloworld.lambdajava.HelloWorldRequestHandler
 public class HelloWorldRequestHandler implements RequestHandler<HelloWorldRequest, HelloWorldResponse> {
 
     @Override
