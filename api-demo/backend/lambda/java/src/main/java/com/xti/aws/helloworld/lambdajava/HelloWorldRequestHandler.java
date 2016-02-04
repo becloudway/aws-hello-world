@@ -5,7 +5,14 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.xti.aws.helloworld.lambdajava.model.HelloWorldRequest;
 import com.xti.aws.helloworld.lambdajava.model.HelloWorldResponse;
 
-//Lambda handler: com.xti.aws.helloworld.lambdajava.HelloWorldRequestHandler
+/**
+ * Lambda handler: com.xti.aws.helloworld.lambdajava.HelloWorldRequestHandler
+ * Api Gateway mapping
+ #set($inputRoot = $input.path('$'))
+ {
+ "it" : "$input.params('it')"
+ }
+ */
 public class HelloWorldRequestHandler implements RequestHandler<HelloWorldRequest, HelloWorldResponse> {
 
     @Override
