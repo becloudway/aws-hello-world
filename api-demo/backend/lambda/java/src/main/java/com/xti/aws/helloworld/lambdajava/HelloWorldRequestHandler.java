@@ -9,6 +9,6 @@ public class HelloWorldRequestHandler implements RequestHandler<HelloWorldReques
 
     @Override
     public HelloWorldResponse handleRequest(HelloWorldRequest helloWorldRequest, Context context) {
-        return new HelloWorldResponse("Hello " + helloWorldRequest.getIt());
+        return new HelloWorldResponse("Hello " + helloWorldRequest.getIt() + "from java8 lambda.");
     }
 }
