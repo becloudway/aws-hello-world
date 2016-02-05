@@ -17,7 +17,7 @@ public class S3WebsiteGenerator {
         this.s3Client = new AmazonS3Client().withRegion(Regions.fromName(System.getenv("AWS_REGION")));
     }
 
-    public String generateWebsite(User user) {
+    public String generateWebsite(String prefix, User user) {
         context.getLogger().log("Generating html website");
 
         StringBuilder htmlBuilder = new StringBuilder()
@@ -45,7 +45,7 @@ public class S3WebsiteGenerator {
         metadata.setContentType("text/html");
         metadata.setContentLength(data.length);
 
-        s3Client.putObject("elliodr-xti-awspresentation-user-sites", fileName, inputStream, metadata);
+        s3Client.putObject(prefix + "-xti-awspresentation-user-sites", fileName, inputStream, metadata);
 
         context.getLogger().log("Html website generated");
 

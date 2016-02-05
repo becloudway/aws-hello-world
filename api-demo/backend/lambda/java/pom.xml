@@ -29,6 +29,7 @@
     </dependencies>
 
     <build>
+        <finalName>aws-helloworld-lambdajava</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
