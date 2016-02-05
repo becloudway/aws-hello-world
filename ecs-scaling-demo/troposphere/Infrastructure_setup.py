@@ -175,12 +175,13 @@ scalinglambda = t.add_resource(Function(
     "ScalingLambda",
     Code=Code(
 		S3Bucket="demo-xti",
-		S3Key="scaler-0.0.1-SNAPSHOT.jar"
+		S3Key="ecs-scaler-0.0.1-SNAPSHOT.jar"
     ),
-    Handler="com.xti.awspresentation.demo.scaler",
+    Handler="com.xti.awspresentation.demo.scaler.Scaler::handler",
     Role=GetAtt("LambdaExecutionRole", "Arn"),
     Runtime="java8",
-    Timeout=30
+    Timeout=30,
+    MemorySize=1536
 ))
 
 lambdaexecutionrole = t.add_resource(Role(
@@ -194,7 +195,13 @@ lambdaexecutionrole = t.add_resource(Role(
                 "Action": ["logs:*"],
                 "Resource": "arn:aws:logs:*:*:*",
                 "Effect": "Allow"
-            }]
+            },
+            {
+                "Action": ["ecs:*"],
+                "Resource": "*",
+                "Effect": "Allow"
+            }
+            ]
         })],
     AssumeRolePolicyDocument={"Version": "2012-10-17", "Statement": [
         {"Action": ["sts:AssumeRole"], "Effect": "Allow",
