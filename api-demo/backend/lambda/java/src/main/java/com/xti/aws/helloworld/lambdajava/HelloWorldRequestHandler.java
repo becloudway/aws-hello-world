@@ -15,6 +15,9 @@ import com.xti.aws.helloworld.lambdajava.model.HelloWorldResponse;
  */
 public class HelloWorldRequestHandler implements RequestHandler<HelloWorldRequest, HelloWorldResponse> {
 
+    public HelloWorldRequestHandler() {
+    }
+
     @Override
     public HelloWorldResponse handleRequest(HelloWorldRequest helloWorldRequest, Context context) {
         return new HelloWorldResponse("Hello " + helloWorldRequest.getIt() + " from java8 lambda.");
