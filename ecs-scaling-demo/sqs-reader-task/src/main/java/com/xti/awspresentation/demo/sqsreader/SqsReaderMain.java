@@ -23,10 +23,11 @@ public class SqsReaderMain {
 			if(result.getMessages().size() > 0) {
 				for (Message message : result.getMessages()) {
 					//process message
-					SQSClient.deleteMessage(new DeleteMessageRequest(sqsUrl, message.getReceiptHandle()));
+                    System.out.println("Deleting message " + message.getBody());
+                    SQSClient.deleteMessage(new DeleteMessageRequest(sqsUrl, message.getReceiptHandle()));
 				}
 			} else {
-				Thread.sleep(200);
+				Thread.sleep(5000);
 			}
 			
 		}

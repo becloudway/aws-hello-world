@@ -9,7 +9,7 @@
 	<artifactId>sqs-reader-task</artifactId>
 
 	<properties>
-		<aws.version>1.10.49</aws.version>
+		<aws.version>1.11.51</aws.version>
 	</properties>
 
 	<dependencies>
