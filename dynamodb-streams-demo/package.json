@@ -1,0 +1,9 @@
+{
+  "name": "dynamodb-streams-demo-yaml",
+  "version": "0.0.1",
+  "dependencies": {
+    "aws-sdk": "^2.12.0",
+    "dynamodb-marshaler": "^2.0.0",
+    "yamljs": "^0.2.8"
+  }
+}
